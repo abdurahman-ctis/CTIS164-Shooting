@@ -50,13 +50,8 @@ int coor[5] = { -140,-620,-1080,-460,-960 };
 int playerY = 0, playerX = 0;
 double visible = 255, visibleE[5] = { 255,255,255,255,255 };
 int totalEnemy = 0, burst = 0, pts = 0, lastpt = 0, px, ex1, ex2, hit;
-//find random double
-double randfrom(double min, double max)
-{
-	double range = (max - min);
-	double div = RAND_MAX / range;
-	return min + (rand() / div);
-}
+
+void Init();
 
 void circle(int x, int y, int r)
 {
@@ -153,31 +148,37 @@ void drawGradient(int x1, int y1, int w, int h, float r, float g, float b) {
 	glVertex2f(x1, y1 - h);
 	glEnd();
 }
-//Drawin player rocket launcher
+//Drawing player rocket launcher
 void player() {
 	
-	glColor4ub(204, 142, 53, visible);
-	glRectf(-75 + playerX, -290 + playerY, -60 + playerX, -260 + playerY);
-	glColor4ub(33, 140, 116, visible);
+	glColor4ub(75, 75, 75, visible);
+	glRectf(-75 + playerX, -270 + playerY, -60 + playerX, -240 + playerY);
+	glColor4ub(0, 0, 0, visible);
 	glBegin(GL_TRIANGLES);
-	glVertex2f(-78 + playerX, -260 + playerY);
-	glVertex2f(-68 + playerX, -250 + playerY);
-	glVertex2f(-57 + playerX, -260 + playerY);
+	glVertex2f(-78 + playerX, -240 + playerY);
+	glVertex2f(-68 + playerX, -230 + playerY);
+	glVertex2f(-57 + playerX, -240 + playerY);
 
-	glVertex2f(-84 + playerX, -290 + playerY);
-	glVertex2f(-75 + playerX, -290 + playerY);
+	glVertex2f(-84 + playerX, -270 + playerY);
 	glVertex2f(-75 + playerX, -270 + playerY);
+	glVertex2f(-75 + playerX, -250 + playerY);
 
-	glVertex2f(-51 + playerX, -290 + playerY);
-	glVertex2f(-60 + playerX, -290 + playerY);
+	glVertex2f(-51 + playerX, -270 + playerY);
 	glVertex2f(-60 + playerX, -270 + playerY);
+	glVertex2f(-60 + playerX, -250 + playerY);
 	glEnd();
-
-	glColor3ub(75, 75, 75);
-	glRectf(-100 + playerX, -300, -85 + playerX, -230);
-	glRectf(-50 + playerX, -300, -35 + playerX, -230);
-	glRectf(-85 + playerX, -200, -75 + playerX, -240);
-	glRectf(-50 + playerX, -200, -60 + playerX, -240);
+	glColor3ub(26, 56, 37);
+	glRectf(-100 + playerX, -273, -30 + playerX, -285);
+	glRectf(-30 + playerX, -285, playerX, -235);
+	glRectf(-90 + playerX, -273, -84 + playerX, -250);
+	glRectf(-50 + playerX, -273, -44 + playerX, -250);
+	glColor3f(0, 0, 0);
+	circle(-90 + playerX, -288, 10);
+	circle(-35 + playerX, -288, 10);
+	glRectf(-15 + playerX,-270, playerX,-245);
+	glColor3f(1, 1, 1);
+	circle(-90 + playerX, -288, 5);
+	circle(-35 + playerX, -288, 5);
 }
 //Drawing enemy planes
 void enemy(pair <int, int> p, int i) {
@@ -256,6 +257,7 @@ void drawStart() {
 	mSec1 = mSec2 = sec2 = 0;
 	sec1 = 2;
 	playerY = 0;
+	Init();
 	player();
 	basis();
 	glColor3f(1, 1, 0);
@@ -498,7 +500,7 @@ void onTimer(int v) {
 			playerY = 0;
 		}
 		else if (playerY != 0)
-			playerY += 4;
+			playerY += 8;
 	}
 	glutPostRedisplay();
 }
