@@ -1,5 +1,5 @@
 /*********
-CTIS164 - Template Source Program
+CTIS164 - HW2
 ----------
 STUDENT : Abdurahman Atakishiyev
 SECTION : 02
@@ -40,7 +40,7 @@ int  winWidth, winHeight; // current Window width and height
 						  // radius r
 						  //
 
-/*Project Variables */
+						  /*Project Variables */
 int state = START;
 pair <int, int> p[5];
 double speed[5] = { 0 };
@@ -50,7 +50,7 @@ int coor[5] = { -140,-620,-1080,-460,-960 };
 int playerY = 0, playerX = 0;
 double visible = 255, visibleE[5] = { 255,255,255,255,255 };
 int totalEnemy = 0, burst = 0, pts = 0, lastpt = 0, px, ex1, ex2, hit;
-
+int missileX;
 void Init();
 
 void circle(int x, int y, int r)
@@ -150,23 +150,6 @@ void drawGradient(int x1, int y1, int w, int h, float r, float g, float b) {
 }
 //Drawing player rocket launcher
 void player() {
-	
-	glColor4ub(75, 75, 75, visible);
-	glRectf(-75 + playerX, -270 + playerY, -60 + playerX, -240 + playerY);
-	glColor4ub(0, 0, 0, visible);
-	glBegin(GL_TRIANGLES);
-	glVertex2f(-78 + playerX, -240 + playerY);
-	glVertex2f(-68 + playerX, -230 + playerY);
-	glVertex2f(-57 + playerX, -240 + playerY);
-
-	glVertex2f(-84 + playerX, -270 + playerY);
-	glVertex2f(-75 + playerX, -270 + playerY);
-	glVertex2f(-75 + playerX, -250 + playerY);
-
-	glVertex2f(-51 + playerX, -270 + playerY);
-	glVertex2f(-60 + playerX, -270 + playerY);
-	glVertex2f(-60 + playerX, -250 + playerY);
-	glEnd();
 	glColor3ub(26, 56, 37);
 	glRectf(-100 + playerX, -273, -30 + playerX, -285);
 	glRectf(-30 + playerX, -285, playerX, -235);
@@ -175,28 +158,46 @@ void player() {
 	glColor3f(0, 0, 0);
 	circle(-90 + playerX, -288, 10);
 	circle(-35 + playerX, -288, 10);
-	glRectf(-15 + playerX,-270, playerX,-245);
+	glRectf(-15 + playerX, -270, playerX, -245);
 	glColor3f(1, 1, 1);
 	circle(-90 + playerX, -288, 5);
 	circle(-35 + playerX, -288, 5);
+
+	glColor4ub(75, 75, 75, visible);
+	glRectf(-75 + missileX, -270 + playerY, -60 + missileX, -240 + playerY);
+	glColor4ub(0, 0, 0, visible);
+	glBegin(GL_TRIANGLES);
+	glVertex2f(-78 + missileX, -240 + playerY);
+	glVertex2f(-68 + missileX, -230 + playerY);
+	glVertex2f(-57 + missileX, -240 + playerY);
+
+	glVertex2f(-84 + missileX, -270 + playerY);
+	glVertex2f(-75 + missileX, -270 + playerY);
+	glVertex2f(-75 + missileX, -250 + playerY);
+
+	glVertex2f(-51 + missileX, -270 + playerY);
+	glVertex2f(-60 + missileX, -270 + playerY);
+	glVertex2f(-60 + missileX, -250 + playerY);
+	glEnd();
+	
 }
 //Drawing enemy planes
 void enemy(pair <int, int> p, int i) {
 	//Primary Color assignment
-	glColor4ub(99, 110, 114,visibleE[i]);
+	glColor4ub(99, 110, 114, visibleE[i]);
 	//Body
 	glRectf(-470 + p.f, 230 + p.s, -390 + p.f, 210 + p.s);
-	circle(-463 + p.f , 220 + p.s, 10);
+	circle(-463 + p.f, 220 + p.s, 10);
 	//Wings and front
 	glBegin(GL_TRIANGLES);
-	glVertex2f(-390 + p.f , 230 + p.s);
-	glVertex2f(-390 + p.f , 210 + p.s);
+	glVertex2f(-390 + p.f, 230 + p.s);
+	glVertex2f(-390 + p.f, 210 + p.s);
 	glVertex2f(-360 + p.f, 210 + p.s);
 
 	glColor4ub(0, 0, 0, visibleE[i]);
-	glVertex2f(-470 + p.f , 245 + p.s);
+	glVertex2f(-470 + p.f, 245 + p.s);
 	glVertex2f(-470 + p.f, 230 + p.s);
-	glVertex2f(-440 + p.f , 230 + p.s);
+	glVertex2f(-440 + p.f, 230 + p.s);
 
 	glVertex2f(-470 + p.f, 223 + p.s);
 	glVertex2f(-475 + p.f, 218 + p.s);
@@ -205,29 +206,29 @@ void enemy(pair <int, int> p, int i) {
 	glBegin(GL_QUADS);
 	glVertex2f(-435 + p.f, 218 + p.s);
 	glVertex2f(-420 + p.f, 218 + p.s);
-	glVertex2f(-440 + p.f , 195 + p.s);
-	glVertex2f(-445 + p.f , 195 + p.s);
+	glVertex2f(-440 + p.f, 195 + p.s);
+	glVertex2f(-445 + p.f, 195 + p.s);
 	glEnd();
 	//Windows
 	glColor4ub(0, 0, 0, visibleE[i]);
-	circle(-410 + p.f , 223 + p.s, 2);
-	circle(-418 + p.f , 223 + p.s, 2);
-	circle(-426 + p.f , 223 + p.s, 2);
+	circle(-410 + p.f, 223 + p.s, 2);
+	circle(-418 + p.f, 223 + p.s, 2);
+	circle(-426 + p.f, 223 + p.s, 2);
 	circle(-434 + p.f, 223 + p.s, 2);
-	circle(-442 + p.f , 223 + p.s, 2);
+	circle(-442 + p.f, 223 + p.s, 2);
 	//Cabin Glass
 	glColor4ub(0, 0, 0, visibleE[i]);
 	glBegin(GL_QUADS);
 	glVertex2f(-400 + p.f, 225 + p.s);
-	glVertex2f(-400 + p.f , 222 + p.s);
-	glVertex2f(-377 + p.f , 222 + p.s);
-	glVertex2f(-382 + p.f , 225 + p.s);
+	glVertex2f(-400 + p.f, 222 + p.s);
+	glVertex2f(-377 + p.f, 222 + p.s);
+	glVertex2f(-382 + p.f, 225 + p.s);
 	glEnd();
 
 }
 //Basic graphic elements present in all states
 void basis() {
-	
+
 	glColor3f(0, 0, 0);
 	glRectf(600, 300, -600, 250);
 	glRectf(600, 250, 450, -300);
@@ -235,7 +236,7 @@ void basis() {
 	vprint(-580, 285, GLUT_BITMAP_9_BY_15, "  TIME");
 
 	vprint(-380, 285, GLUT_BITMAP_9_BY_15, "  TOTAL R.");
-	
+
 	vprint(-90, 285, GLUT_BITMAP_9_BY_15, "  BURST R.");
 
 	vprint(260, 285, GLUT_BITMAP_9_BY_15, "  LAST pt");
@@ -243,7 +244,7 @@ void basis() {
 	vprint(460, 285, GLUT_BITMAP_9_BY_15, "  TOTAL pts");
 
 	glColor3f(0, 1, 0);
-	vprint(-565, 265, GLUT_BITMAP_8_BY_13, "%d%d:%d%d",  sec1, sec2, mSec1, mSec2);
+	vprint(-565, 265, GLUT_BITMAP_8_BY_13, "%d%d:%d%d", sec1, sec2, mSec1, mSec2);
 	vprint(-330, 265, GLUT_BITMAP_9_BY_15, "%d", totalEnemy);
 	vprint(-50, 265, GLUT_BITMAP_9_BY_15, "%d", burst);
 	vprint(300, 265, GLUT_BITMAP_9_BY_15, "%d", lastpt);
@@ -253,6 +254,7 @@ void basis() {
 }
 
 void drawStart() {
+	missileX = playerX;
 	timerState = 0;
 	mSec1 = mSec2 = sec2 = 0;
 	sec1 = 2;
@@ -319,7 +321,10 @@ void onKeyDown(unsigned char key, int x, int y)
 	if (key == 27)
 		exit(0);
 	if (key == 32 && playerY == 0 && state == GAME)
+	{
+		missileX = playerX;
 		playerY = 1;
+	}
 	// to refresh the window it calls display() function
 	glutPostRedisplay();
 }
@@ -344,21 +349,31 @@ void onSpecialKeyDown(int key, int x, int y)
 	switch (key) {
 	case GLUT_KEY_UP: up = true; break;
 	case GLUT_KEY_DOWN: down = true; break;
-	case GLUT_KEY_LEFT: if(state==GAME)if (playerX >= -500)playerX -= 7; break;
-	case GLUT_KEY_RIGHT:if (state == GAME) if (playerX <= 450)playerX += 7; break;
+	case GLUT_KEY_LEFT:
+		if (state == GAME && timerState == 1)
+			if (playerX >= -500)
+				playerX -= 7;
+		if (playerY == 0)
+			missileX = playerX; break;
+	case GLUT_KEY_RIGHT:
+		if (state == GAME&& timerState == 1)
+			if (playerX <= 450)
+				playerX += 7;
+		if (playerY == 0)
+			missileX = playerX; break;
 	case GLUT_KEY_F1: if (state == START)
-	{ 
+	{
 		burst = lastpt = totalEnemy = pts = 0;
 		state = GAME;
-		timerState = 1; 
+		timerState = 1;
 	}
-	else {
-		  if (timerState == 1)
-			  timerState = 0;
-		  else
-			  timerState = 1;
-		  }
-			  break;
+					  else {
+						  if (timerState == 1)
+							  timerState = 0;
+						  else
+							  timerState = 1;
+					  }
+					  break;
 	}
 
 	// to refresh the window it calls display() function
@@ -472,11 +487,11 @@ void onTimer(int v) {
 				glutPostRedisplay();
 			}
 			p[i].f += SPEED;
-			px = (-78 + playerX);
+			px = (-78 + missileX);
 			ex1 = (-473 + p[i].f);
 			ex2 = (-360 + p[i].f);
 			hit = abs(px - (ex1 + ex2) / 2);
-			if (px > ex1 && (-78 + playerX) < ex2 && (-250 + playerY) < (240 + p[i].s) && (-250 + playerY) > (200 + p[i].s))
+			if (px > ex1 && px < ex2 && (-250 + playerY) < (240 + p[i].s) && (-250 + playerY) > (200 + p[i].s))
 			{
 				if (hit < 5 && hit>0)
 					lastpt = 5;
@@ -498,6 +513,7 @@ void onTimer(int v) {
 		{
 			visible = 255;
 			playerY = 0;
+			missileX = playerX;
 		}
 		else if (playerY != 0)
 			playerY += 8;
