@@ -9,6 +9,8 @@ PROBLEMS: If your program does not function correctly,
 explain here which parts are not running.
 *********/
 
+/* New Feature: HIGH SCORE Table -> Displayed in the start state, shows highest scores in descending order */
+
 #include <GL/glut.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,6 +19,7 @@ explain here which parts are not running.
 #include <string.h>
 #include <stdarg.h>
 #include <vector>
+#include <algorithm>
 using  namespace std;
 #define WINDOW_WIDTH  1200
 #define WINDOW_HEIGHT 600
@@ -51,6 +54,7 @@ int playerY = 0, playerX = 0;
 double visible = 255, visibleE[5] = { 255,255,255,255,255 };
 int totalEnemy = 0, burst = 0, pts = 0, lastpt = 0, px, ex1, ex2, hit;
 int missileX;
+vector<int> hscore;
 void Init();
 
 void circle(int x, int y, int r)
@@ -179,7 +183,7 @@ void player() {
 	glVertex2f(-60 + missileX, -270 + playerY);
 	glVertex2f(-60 + missileX, -250 + playerY);
 	glEnd();
-	
+
 }
 //Drawing enemy planes
 void enemy(pair <int, int> p, int i) {
@@ -250,23 +254,29 @@ void basis() {
 	vprint(300, 265, GLUT_BITMAP_9_BY_15, "%d", lastpt);
 	glColor3f(1, 0, 0);
 	vprint2(510, 245, 0.25, "%d", pts);
-
+	
 }
 
 void drawStart() {
 	missileX = playerX;
 	timerState = 0;
-	mSec1 = mSec2 = sec2 = 0;
-	sec1 = 2;
+	mSec1 = mSec2 = sec2 = 5;
+	sec1 = 0;
 	playerY = 0;
 	Init();
 	player();
 	basis();
 	glColor3f(1, 1, 0);
-	vprint2(480, 120, 0.33, "<F1>");
-	vprint2(500, 60, 0.33, "for");
-	vprint2(490, 0, 0.33, "new");
-	vprint2(475, -60, 0.33, "game");
+	vprint2(480, 180, 0.33, "<F1>");
+	vprint2(500, 120, 0.33, "for");
+	vprint2(490, 60, 0.33, "new");
+	vprint2(475, 0, 0.33, "game");
+	sort(hscore.begin(), hscore.end());
+	reverse(hscore.begin(), hscore.end());
+	glColor3f(0, 0, 1);
+	vprint(475, -70, GLUT_BITMAP_9_BY_15, "HIGH SCORES");
+	for (int j = 0; j < hscore.size(); j++)
+		vprint(475, -95 - j*20, GLUT_BITMAP_8_BY_13, "%d. %d", j + 1, hscore.at(j));
 }
 
 void drawGame() {
@@ -390,8 +400,10 @@ void onSpecialKeyUp(int key, int x, int y)
 	switch (key) {
 	case GLUT_KEY_UP: up = false; break;
 	case GLUT_KEY_DOWN: down = false; break;
-	case GLUT_KEY_LEFT: left = false; break;
-	case GLUT_KEY_RIGHT: right = false; break;
+	case GLUT_KEY_LEFT: //left = false;
+		break;
+	case GLUT_KEY_RIGHT:// right = false;
+		break;
 	}
 
 	// to refresh the window it calls display() function
@@ -474,6 +486,7 @@ void onTimer(int v) {
 		{
 			state = START;
 			timerState = 0;
+			hscore.insert(hscore.begin(),pts);
 		}
 		for (int i = 0; i < 5; i++)
 		{
@@ -535,7 +548,7 @@ void Init() {
 	p[2].first = coor[2];
 	p[3].first = coor[3];
 	p[4].first = coor[4];
-
+	hscore.resize(5);
 }
 
 void main(int argc, char *argv[]) {
